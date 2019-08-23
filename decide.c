@@ -26,6 +26,9 @@ int CODEPOINTER(int tmp)
             case 128:
                 re_value = 4;
                 break;
+            case 129:
+                re_value = 5;
+                break;
             case 130:
                 register_write(CONTROLMODETRIGGER, 0x00);
                 re_value = 3;
@@ -38,12 +41,54 @@ int CODEPOINTER(int tmp)
 
 int COMMANDSTATUS(int tmp)
 {
+    int k;
     int re_val;
-    re_val = register_read(CODEPOINTER_VAL);
-    switch (tmp)
+    while ((k++) < 3500)
     {
-    case 114:
-        dpd_error(CODEPOINTER_VAL, re_val);
-        break;
+        re_val = register_read(CODEPOINTER_VAL);
+        if (tmp == re_val || tmp == 114)
+        {
+            k = 4000;
+            switch (tmp)
+            {
+            case 2:
+                break;
+            case 114:
+                dpd_error(CODEPOINTER_VAL, re_val);
+                break;
+            }
+        }
     }
+}
+
+int TRIGGERACK(int tmp)
+{
+    int re_val;
+    int i, k = 0;
+    if (tmp == 1)
+    {
+        register_write(CONTROLMODETRIGGER, 0xabcdef12);
+    }
+    while ((k++) < 35000)
+    {
+        re_val = register_read(TRIGGERACK_VAL);
+        if (tmp == re_val)
+        {
+            if (tmp == 0)
+            {
+                k = 40000;
+                COMMANDSTATUS(114);
+            }
+            if (tmp == 1)
+            {
+                k = 40000;
+                i = CODEPOINTER(129);
+                if (i == 5)
+                {
+                    register_write(CONTROLMODETRIGGER, 0x00);
+                }
+            }
+        }
+    }
+    return k;
 }

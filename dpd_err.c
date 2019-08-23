@@ -367,7 +367,7 @@ static void re_commandstatus(int temp)
     }
 }
 
-void dpd_Status(uint32_t addr, int temp)
+void dpd_error(uint32_t addr, int temp)
 {
     if (addr == CODEPOINTER_VAL)
         re_codepointer(temp);

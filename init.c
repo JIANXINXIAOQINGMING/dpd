@@ -32,24 +32,8 @@ void dpd_init(int tmp)
             {
                 system("/usr/bin/dpd-smp -u 0 &");
                 i = CODEPOINTER(130);
-                switch (i)
-                {
-                case 3:
-                    i = CODEPOINTER(128);
-                    switch (i)
-                    {
-                    case 4:
-                        fprintf(stdout, "DPD init successful.\n");
-                        k = 3;
-                        break;
-                    default:
-                        break;
-                    }
-                    break;
-                default:
-                    system("killall /usr/bin/dpd-smp");
-                    break;
-                }
+                fprintf(stdout, "DPD init successful.\n");
+                k = 3;
             }
         }
     }

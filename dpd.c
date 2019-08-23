@@ -49,10 +49,8 @@ int main(int argc, char *argv[])
             dpd_init(1);
             break;
         case 's':
-            dpd_on();
             break;
         case 'o':
-            // dpd_off();
             break;
         case 'm':
             dpd_mode_set(optarg);
