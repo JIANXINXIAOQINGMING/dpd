@@ -156,49 +156,48 @@ static void re_commandstatus(int temp)
         fprintf(stdout, "Status:    CONFIG_FAILURE_NZCOUNTTHRESHOLD:ERROR: Failed to successfully update the MET parameter set because of invalid NZCOUNTTHRESHOLD parameter.\n");
         break;
     case -236:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CONFIG_FAILURE_RXPHASESTEP:ERROR: Failed to successfully update the ECF parameter set because of invalid RXPHASESTEP parameter.\n");
         break;
     case -235:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CONFIG_FAILURE_CORRECTION_BW:ERROR: Failed to successfully update the ECF parameter set because of invalid CORRECTION_BW parameter.\n");
         break;
     case -234:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CONFIG_FAILURE_ODDEXPTHRESHOLD:ERROR: Failed to successfully update the ODD parameter set because of invalid ODDEXPTHRESHOLD and ODPEXPTHRESHOLD parameters (ODDEXPTHRESHOLD > ODPEXPTHRESHOLD).\n");
         break;
     case -233:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CONFIG_FAILURE_RXINPUTFORMAT:ERROR: Failed to successfully update the ECF parameter set because of invalid RXINPUTFORMAT parameter.\n");
         break;
     case -232:
-        fprintf(stdout, "Status:    :\n");
-        break;
+        fprintf(stdout, "Status:    CONFIG_FAILURE_ODDENABLE:ERROR: Failed to successfully update the ODD parameter set because of invalid ODPENABLE parameter.\n");
     case -231:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CONFIG_FAILURE_PORTCONTROL:ERROR: Failed to successfully update the DCL parameter set because of invalid PORTCONTROL parameter.\n");
         break;
     case -230:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CONFIG_FAILURE_QMCNUMESTAVERAGE:ERROR: Failed to successfully update the QMC parameter set because of invalid QMCNUMESTAVERAGE parameter \n");
         break;
     case -229:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CONFIG_FAILURE_QMCTXENABLE:ERROR: Failed to successfully update the QMC parameter set because of invalid QMCTXENABLE parameter.\n");
         break;
     case -228:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CONFIG_FAILURE_CAPTUREMODE_PIW:ERROR: Failed to successfully update the CAP parameter set because of invalid CAPTUREMODE parameter (PIW hardware is not available).\n");
         break;
     case -227:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CONFIG_FAILURE_LEAKAGEVALUE:ERROR: Failed to successfully update the ECF parameter set because of invalid LEAKAGEVALUE parameter.\n");
         break;
     case -226:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CONFIG_FAILURE_DAMPINGVALUE:ERROR: Failed to successfully update the ECF parameter set because of invalid DAMPINGVALUE parameter.\n");
         break;
     case -225:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CONFIG_FAILURE_SPECTRALINVERSION:ERROR: Failed to successfully update the ECF parameter set because of invalid SPECTRALINVERSION parameter.\n");
         break;
     case -224:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CONFIG_FAILURE_MINDELAY_BIG:ERROR: Failed to successfully update the ECF parameter set because of invalid MINDELAY parameter (MINDELAY too big).\n");
         break;
     case -223:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CONFIG_FAILURE_LS_REGULARIZATION:ERROR: Failed to successfully update the ECF parameter set because of invalid LS_REGULARIZATION parameter.\n");
         break;
     case -222:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CONFIG_FAILURE_QMCGAINMU:ERROR: Failed to successfully update the QMC parameter set because of invalid QMCGAINMU parameter \n");
         break;
     case -221:
         fprintf(stdout, "Status:    :\n");
