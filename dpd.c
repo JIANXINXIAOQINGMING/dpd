@@ -46,10 +46,10 @@ int main(int argc, char *argv[])
         case 'h':
             print_usage(stdout, 0);
         case 'i':
-            dpd_init();
+            dpd_init(1);
             break;
         case 's':
-            // dpd_on();
+            dpd_on();
             break;
         case 'o':
             // dpd_off();
@@ -58,9 +58,10 @@ int main(int argc, char *argv[])
             dpd_mode_set(optarg);
             break;
         case 'a':
+            COMMANDSTATUS(114);
             break;
         case 'r':
-            dpd_init();
+            dpd_init(0);
             break;
         }
     }

@@ -173,7 +173,7 @@ static void re_commandstatus(int temp)
         fprintf(stdout, "Status:    CONFIG_FAILURE_PORTCONTROL:ERROR: Failed to successfully update the DCL parameter set because of invalid PORTCONTROL parameter.\n");
         break;
     case -230:
-        fprintf(stdout, "Status:    CONFIG_FAILURE_QMCNUMESTAVERAGE:ERROR: Failed to successfully update the QMC parameter set because of invalid QMCNUMESTAVERAGE parameter \n");
+        fprintf(stdout, "Status:    CONFIG_FAILURE_QMCNUMESTAVERAGE:ERROR: Failed to successfully update the QMC parameter set because of invalid QMCNUMESTAVERAGE parameter.\n");
         break;
     case -229:
         fprintf(stdout, "Status:    CONFIG_FAILURE_QMCTXENABLE:ERROR: Failed to successfully update the QMC parameter set because of invalid QMCTXENABLE parameter.\n");
@@ -197,7 +197,7 @@ static void re_commandstatus(int temp)
         fprintf(stdout, "Status:    CONFIG_FAILURE_LS_REGULARIZATION:ERROR: Failed to successfully update the ECF parameter set because of invalid LS_REGULARIZATION parameter.\n");
         break;
     case -222:
-        fprintf(stdout, "Status:    CONFIG_FAILURE_QMCGAINMU:ERROR: Failed to successfully update the QMC parameter set because of invalid QMCGAINMU parameter \n");
+        fprintf(stdout, "Status:    CONFIG_FAILURE_QMCGAINMU:ERROR: Failed to successfully update the QMC parameter set because of invalid QMCGAINMU parameter.\n");
         break;
     case -221:
         fprintf(stdout, "Status:    CONFIG_FAILURE_QMCPHASEMU:ERROR: Failed to successfully update the QMC parameter set because of invalid QMCPHASEMU parameter.\n");
@@ -215,7 +215,7 @@ static void re_commandstatus(int temp)
         fprintf(stdout, "Status:    CONFIG_FAILURE_ODDPS0THRESHOLD:ERROR: Failed to successfully update the ODD parameter set because of invalid ODDPS0THRESHOLD and ODPPS0THRESHOLD parameters (ODDPS0THRESHOLD > ODPPS0THRESHOLD).\n");
         break;
     case -216:
-        fprintf(stdout, "Status:    CONFIG_FAILURE_INVALID_PORT:ERROR: Invalid port was selected \n");
+        fprintf(stdout, "Status:    CONFIG_FAILURE_INVALID_PORT:ERROR: Invalid port was selected.\n");
         break;
     case -215:
         fprintf(stdout, "Status:    CONFIG_FAILURE_CAPTUREWINDOWS:ERROR: Failed to successfully update the CAPWIN parameter set because minimum window delay is greater than maximum window delay (MIN_X > MAX_X).\n");
@@ -242,136 +242,127 @@ static void re_commandstatus(int temp)
         fprintf(stdout, "Status:    ALIGNMENT_CALIBRATED_LOOPGAIN_FAILURE:ERROR: The loop gain computed for the current capture was different from the loop gain computed during alignment calibration.\n");
         break;
     case -120:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    ALIGNMENT_FAILURE_NO_CORRELATION:ERROR: Signal alignment failure (failed to detect any correlation between captured TX and RX samples).\n");
         break;
     case -119:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    DPD_COEF_LUT_OVERFLOW_FAILURE:ERROR: Indicates that a overflow occurred while converting a coefficient set to LUT values.\n");
         break;
     case -118:
-        fprintf(stdout, "Status:    :\n");
-        break;
-    case -117:
-        fprintf(stdout, "Status:    :\n");
-        break;
-    case -116:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    DPD_COEF_FIXED_POINT_STORAGE_FAILURE:ERROR: Indicates that a overflow occurred while converting a double precision coefficient set to fixed point values.\n");
         break;
     case -115:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    DPD_COEF_LEASTSQUARES_FAILURE:ERROR: A numerical issue was encountered during the least squares processing (for example, divide by zero during matrix inversion).\n");
         break;
     case -114:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CAPTURE_SCA_FAILURE:ERROR: Indicates a failure to capture a statistically sufficient set of samples that passes all SCA criteria for ECF processing.\n");
         break;
     case -113:
-        fprintf(stdout, "Status:    :\n");
-        break;
-    case -112:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CAPTURE_HARDWARE_CAPTURE_FAILURE:ERROR: Indicates a failure to capture new samples in the hardware.\n");
         break;
     case -111:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    HISTOGRAM_FAILURE:ERROR: Failed to detected the histogram complete signal.\n");
         break;
     case -110:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CAPTURE_DCL_SCA_FAILURE:ERROR: Failed to achieve a capture threshold that matched DCL power.\n");
         break;
     case -109:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    SRX_ZERO_CAPTURES:ERROR: Zeros were captured in the RX capture buffer.\n");
         break;
     case -108:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CAPTURE_PEAK_THRESHOLD_FAILURE:ERROR: Peak capture failed\n");
         break;
     case -107:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    COEF_STORAGE_FAILURE_RX_MODEL:ERROR: Failed to store fixed point rx model coefficients accurately\n");
         break;
     case -106:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    SRX_CONTROL_WAIT_FOR_IDLE_TIMEOUT:ERROR: sRX control timeout occurred.\n");
         break;
     case -105:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    SRX_CONTROL_ANTENNA_MATCH_TIMEOUT:ERROR: sRX waiting for antenna match timed out.\n");
         break;
     case -104:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    SRX_EXTERNAL_CONTROL_TIMEOUT:ERROR: Port switch with external controls timed out.\n");
         break;
     case -103:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    SRX_DCL_SWITCH_CONTROL_TIMEOUT:ERROR: Port switch during DCL timed out.\n");
         break;
     case -102:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    C2L_CONVERSION_COMPLETE_TIMEOUT:ERROR: c2l engine timed out before completing conversion.\n");
         break;
     case -101:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CAPTURE_INVALID_1FS_REAL:ERROR: Format of rx samples in capture do not appear to be real 1fs mode.\n");
         break;
     case -100:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CAPTURE_CONSTANT_SID_FAILURE:ERROR: Capture process captured multiple sids.\n");
         break;
     case -99:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CAPTURE_HIRESMONITOR_FAILURE:ERROR: Capture failed, hi-res signal dropped during capture.\n");
         break;
     case -98:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CAPTURE_FAILURE_HIST_COUNT_INCREMENT:ERROR: Capture failed, capture histogram count failed to change.\n");
         break;
     case -97:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CAPTURE_COMPLETE_CLEAR_FAILURE:ERROR: Capture failed, the capture complete flag failed to clear.\n");
         break;
     case -64:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    STATE_UNCERTAINTY:ERROR: Detected channel state change during update.\n");
         break;
     case -63:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    DCL_MULTISET_STATE_MISMATCH:ERROR: State mismatch between channel and capture with multi-set DCL.\n");
         break;
     case -62:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    STATE_UNCERTAINTY_AT_CAPT_START:ERROR: Detected channel state change during capture.\n");
         break;
     case -3:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    INVALID_QMC_COMMAND:ERROR: Invalid QMC command.\n");
         break;
     case -2:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    INVALID_CAPTURE_RAM:ERROR: Requested invalid capture RAM access\n");
         break;
     case -1:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    INVALID_COMMAND:ERROR: Indicates an invalid command was requested.\n");
         break;
     case 0:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    ZERO:Undefined: During debug, may indicate that s_axi_ctrl interface is being used to control host interface.\n");
         break;
     case 2:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    SUCCESSFUL:Indicates successful completion of the requested command.\n");
         break;
     case 3:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    SUCCESSFUL_FRACTIONAL_DELAY_WARNING:Successful update but calibrated fractional delay is above threshold, system may be un-stable.\n");
         break;
     case 15:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    SUCCESSFUL_WITH_LOW_RELIABLITY:Successful alignment but with LOW reliability, ensure correct delay.\n");
         break;
     case 32:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    LOW_TX_POWER:The tx power is below minimum level, defined by DCLTXLOWPOWER, to perform DPD updates while DCL is running.\n");
         break;
     case 33:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    LOW_RX_POWER:The rx power is below minimum level, defined by DCLRXLOWPOWER, to perform DPD updates while DCL is running.\n");
         break;
     case 34:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    PORT_SKIPPED:user has requested to skip updating this port during DCL routines\n");
         break;
     case 35:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    PORT_TRACK_SKIPPED:user has requested to skip updating and tracking this port during DCL routines\n");
         break;
     case 36:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    PORT_REQUEST_FORWARD:The DCL routine is currently requesting a forward port.\n");
         break;
     case 37:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    PORT_REQUEST_REFLECTED:The DCL routine is currently requesting a reflected port.\n");
         break;
     case 255:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    OVERDRIVE_DETECTED:Indicates that Over-Drive was detected (estimated expansion is beyond the limit set by ODDEXPTHRESHOLD) for the current ECF update, the coefficients are NOT blocked.\n");
         break;
     case 256:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    OVERDRIVE_PROTECTED:Indicates that Over-Drive was detected (estimated expansion is beyond the limit set by ODPEXPTHRESHOLD) for the current ECF update, the coefficients ARE blocked (that is, not switched into the datapath)\n");
         break;
     case 257:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    EXPANSION_SATURATION_WARNING:Indicates that the measured expansion is beyond the limit set by ODDPS0THRESHOLD for the current ECF update, the coefficients are NOT blocked.\n");
         break;
     case 258:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    EXPANSION_SATURATION:Indicates that the measured expansion is beyond the limit set by ODPPS0THRESHOLD for the current ECF update, future coefficient updates are limited.\n");
         break;
     }
 }

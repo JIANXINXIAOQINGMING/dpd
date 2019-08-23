@@ -35,3 +35,15 @@ int CODEPOINTER(int tmp)
     }
     return re_value;
 }
+
+int COMMANDSTATUS(int tmp)
+{
+    int re_val;
+    re_val = register_read(CODEPOINTER_VAL);
+    switch (tmp)
+    {
+    case 114:
+        dpd_error(CODEPOINTER_VAL, re_val);
+        break;
+    }
+}
