@@ -6,12 +6,12 @@
 #include "address.h"
 #include "init.h"
 #include "mode.h"
+#include "dpd_err.h"
 
 void print_usage(FILE *stream, int exit_code)
 {
     fprintf(stream,
             "\t-h  --help     Display this usage information.\n"
-            "\t-e  --error    DPD status error inquire.\n"
             "\t-s  --start    DPD on.\n"
             "\t-o  --stop     DPD off.\n"
             "\t-i  --init     DPD init.\n"
@@ -26,10 +26,9 @@ int main(int argc, char *argv[])
     int next_option = 1;
     int re_val = 0;
 
-    const char *const short_options = "he:siom:a";
+    const char *const short_options = "hsiom:a";
     const struct option long_options[] = {
         {"help", 0, NULL, 'h'},
-        {"error", 1, NULL, 'e'},
         {"start", 0, NULL, 's'},
         {"init", 0, NULL, 'i'},
         {"stop", 0, NULL, 'o'},
@@ -44,9 +43,6 @@ int main(int argc, char *argv[])
         {
         case 'h':
             print_usage(stdout, 0);
-        case 'e':
-            // error_check(optarg);
-            break;
         case 'i':
             dpd_init();
             break;
