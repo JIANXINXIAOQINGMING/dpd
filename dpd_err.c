@@ -200,46 +200,46 @@ static void re_commandstatus(int temp)
         fprintf(stdout, "Status:    CONFIG_FAILURE_QMCGAINMU:ERROR: Failed to successfully update the QMC parameter set because of invalid QMCGAINMU parameter \n");
         break;
     case -221:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CONFIG_FAILURE_QMCPHASEMU:ERROR: Failed to successfully update the QMC parameter set because of invalid QMCPHASEMU parameter.\n");
         break;
     case -220:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CONFIG_FAILURE_QMCOFFSETMU:ERROR: Failed to successfully update the QMC parameter set because of invalid QMCOFFSETMU parameter.\n");
         break;
     case -219:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CONFIG_FAILURE_MINUPDATETIME:ERROR: Failed to successfully update the DCL parameter set because of invalid MINUPDATETIME parameter.\n");
         break;
     case -218:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CONFIG_FAILURE_DCLSTARTUPDAMPING:ERROR: Failed to successfully update the DCL parameter set because of invalid DCLSTARTUPDAMPING parameter.\n");
         break;
     case -217:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CONFIG_FAILURE_ODDPS0THRESHOLD:ERROR: Failed to successfully update the ODD parameter set because of invalid ODDPS0THRESHOLD and ODPPS0THRESHOLD parameters (ODDPS0THRESHOLD > ODPPS0THRESHOLD).\n");
         break;
     case -216:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CONFIG_FAILURE_INVALID_PORT:ERROR: Invalid port was selected \n");
         break;
     case -215:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    CONFIG_FAILURE_CAPTUREWINDOWS:ERROR: Failed to successfully update the CAPWIN parameter set because minimum window delay is greater than maximum window delay (MIN_X > MAX_X).\n");
         break;
     case -127:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    ALIGNMENT_PHASEOFFSET_DETECTION_FAILURE:ERROR: Signal alignment failure (phase offset detection failed).\n");
         break;
     case -126:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    ALIGNMENT_ZERO_PEAKS_DETECTED:ERROR: No peaks were detected in time delay cross correlation function. Adjust the center of the search window or increase the window size.\n");
         break;
     case -125:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    ALIGNMENT_RX_OVERFLOW_GAIN_ALIGN:ERROR: Gain alignment overflow. Rx samples cannot gain align to Tx without overflowing the fixed point storage, reduce input signal level to DPD.\n");
         break;
     case -124:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    AVERAGE_FILTER_GAIN_FAILURE:ERROR: The average gain of the DPD filter is beyond the limit set by the AVERAGE_PWR_CHANGE parameter in the ODD set.\n");
         break;
     case -123:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    ALIGNMENT_FAILURE_ONE_PEAK:ERROR: Signal alignment failure (failed to achieve coarse alignment metric for single strong peak).\n");
         break;
     case -122:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    ALIGNMENT_PRE_MSE_FAILURE:ERROR: The mean squared error between the aligned TX and RX samples is too high.\n");
         break;
     case -121:
-        fprintf(stdout, "Status:    :\n");
+        fprintf(stdout, "Status:    ALIGNMENT_CALIBRATED_LOOPGAIN_FAILURE:ERROR: The loop gain computed for the current capture was different from the loop gain computed during alignment calibration.\n");
         break;
     case -120:
         fprintf(stdout, "Status:    :\n");
