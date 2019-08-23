@@ -16,7 +16,8 @@ void print_usage(FILE *stream, int exit_code)
             "\t-o  --stop     DPD off.\n"
             "\t-i  --init     DPD init.\n"
             "\t-m  --mode     DPD mode set.\n"
-            "\t-a  --status   DPD status.\n");
+            "\t-a  --status   DPD status.\n"
+            "\t-r  --reset    DPD reset.\n");
     exit(exit_code);
 }
 
@@ -26,7 +27,7 @@ int main(int argc, char *argv[])
     int next_option = 1;
     int re_val = 0;
 
-    const char *const short_options = "hsiom:a";
+    const char *const short_options = "hsiom:ar";
     const struct option long_options[] = {
         {"help", 0, NULL, 'h'},
         {"start", 0, NULL, 's'},
@@ -34,6 +35,7 @@ int main(int argc, char *argv[])
         {"stop", 0, NULL, 'o'},
         {"mode", 1, NULL, 'm'},
         {"status", 0, NULL, 'a'},
+        {"reset", 0, NULL, 'r'},
         {NULL, 0, NULL, 0}};
 
     while (next_option != -1)
@@ -56,6 +58,9 @@ int main(int argc, char *argv[])
             dpd_mode_set(optarg);
             break;
         case 'a':
+            break;
+        case 'r':
+            dpd_init();
             break;
         }
     }
