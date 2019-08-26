@@ -8,12 +8,12 @@ int CODEPOINTER(int tmp)
     int i = 0;
     volatile int codepointer_status;
     int re_value = 0;
-    while ((i++) < 35000)
+    while ((i++) < CTIME)
     {
         codepointer_status = register_read(CODEPOINTER_VAL);
         if (tmp == codepointer_status || tmp == 114)
         {
-            i = 40000;
+            i = SUCCESS;
             switch (codepointer_status)
             {
             case 114:
@@ -43,12 +43,12 @@ int COMMANDSTATUS(int tmp)
 {
     int k;
     int re_val;
-    while ((k++) < 3500)
+    while ((k++) < CTIME)
     {
         re_val = register_read(CODEPOINTER_VAL);
         if (tmp == re_val || tmp == 114)
         {
-            k = 4000;
+            k = SUCCESS;
             switch (tmp)
             {
             case 2:
@@ -59,6 +59,7 @@ int COMMANDSTATUS(int tmp)
             }
         }
     }
+    return k;
 }
 
 int TRIGGERACK(int tmp)
@@ -69,19 +70,19 @@ int TRIGGERACK(int tmp)
     {
         register_write(CONTROLMODETRIGGER, 0xabcdef12);
     }
-    while ((k++) < 35000)
+    while ((k++) < CTIME)
     {
         re_val = register_read(TRIGGERACK_VAL);
         if (tmp == re_val)
         {
             if (tmp == 0)
             {
-                k = 40000;
+                k = SUCCESS;
                 COMMANDSTATUS(114);
             }
             if (tmp == 1)
             {
-                k = 40000;
+                k = SUCCESS;
                 i = CODEPOINTER(129);
                 if (i == 5)
                 {

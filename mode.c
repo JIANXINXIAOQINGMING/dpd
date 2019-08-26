@@ -16,12 +16,12 @@ int dpd_mode_set(int temp)
             register_write(CONTROLMODEREGISTER, 0x06);
             register_write(PORTNUM, 0x00);
             k = TRIGGERACK(1);
-            if (k == 4000)
+            if (k == SUCCESS)
             {
                 i = TRIGGERACK(0);
-                if (i == 4000)
+                if (i == SUCCESS)
                 {
-                    fprintf(stdout, "DPD on successful!");
+                    fprintf(stdout, "DPD mode successful!");
                 }
             }
         }

@@ -28,7 +28,7 @@ int register_read(uint32_t addr)
         printf("MAP_FAILED\n");
 
     volatile uint32_t i;
-    i = (target - CONTROLMODETRIGGER) / 4;
+    i = (target & 0x0000FFFF) / 4;
     re_value = *(mare_base + i);
 
     /* 删除分配的虚拟地址 */
@@ -61,7 +61,7 @@ void register_write(uint32_t addr, uint32_t write_data)
         printf("MAP_FAILED\n");
 
     volatile uint32_t i;
-    i = (target - CONTROLMODETRIGGER) / 4;
+    i = (target & 0x0000FFFF) / 4;
     virt_addr = map_base + i;
     *(volatile uint32_t *)virt_addr = writeval;
 
