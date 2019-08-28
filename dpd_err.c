@@ -169,6 +169,7 @@ static void re_commandstatus(int temp)
         break;
     case -232:
         fprintf(stdout, "Status:    CONFIG_FAILURE_ODDENABLE:ERROR: Failed to successfully update the ODD parameter set because of invalid ODPENABLE parameter.\n");
+        break;
     case -231:
         fprintf(stdout, "Status:    CONFIG_FAILURE_PORTCONTROL:ERROR: Failed to successfully update the DCL parameter set because of invalid PORTCONTROL parameter.\n");
         break;

@@ -30,7 +30,7 @@ int CODEPOINTER(int tmp)
                 re_value = 5;
                 break;
             case 130:
-                register_write(CONTROLMODETRIGGER, 0x00);
+                register_write(CONTROLMODETRIGGER, 0);
                 re_value = 3;
                 break;
             }
@@ -39,7 +39,7 @@ int CODEPOINTER(int tmp)
     return re_value;
 }
 
-int COMMANDSTATUS(int tmp)
+void COMMANDSTATUS(int tmp)
 {
     int k;
     int re_val;
@@ -54,12 +54,11 @@ int COMMANDSTATUS(int tmp)
             case 2:
                 break;
             case 114:
-                dpd_error(CODEPOINTER_VAL, re_val);
+                dpd_error(COMMANDSTATUS_VAL, re_val);
                 break;
             }
         }
     }
-    return k;
 }
 
 int TRIGGERACK(int tmp)
@@ -86,7 +85,7 @@ int TRIGGERACK(int tmp)
                 i = CODEPOINTER(129);
                 if (i == 5)
                 {
-                    register_write(CONTROLMODETRIGGER, 0x00);
+                    register_write(CONTROLMODETRIGGER, 0);
                 }
             }
         }

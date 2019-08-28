@@ -14,7 +14,6 @@ void print_usage(FILE *stream, int exit_code)
             "\t-h  --help     Display this usage information.\n"
             "\t-s  --start    DPD on.\n"
             "\t-o  --stop     DPD off.\n"
-            "\t-m  --mode     DPD mode set.\n"
             "\t-d  --debug    DPD debug.\n");
     exit(exit_code);
 }
@@ -23,12 +22,11 @@ int main(int argc, char *argv[])
 {
     int next_option = 1;
 
-    const char *const short_options = "hsom:d";
+    const char *const short_options = "hsod";
     const struct option long_options[] = {
         {"help", 0, NULL, 'h'},
         {"start", 0, NULL, 's'},
         {"stop", 0, NULL, 'o'},
-        {"mode", 1, NULL, 'm'},
         {"debug", 0, NULL, 'd'},
         {NULL, 0, NULL, 0}};
 
@@ -40,17 +38,13 @@ int main(int argc, char *argv[])
         case 'h':
             print_usage(stdout, 0);
         case 's':
+            dpd_init();
+            // dpd_mode_set();
             break;
         case 'o':
             break;
-        case 'm':
-            dpd_mode_set(optarg);
-            break;
         case 'd':
             COMMANDSTATUS(114);
-            break;
-        default:
-            dpd_init();
             break;
         }
     }

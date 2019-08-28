@@ -22,18 +22,22 @@ static void dpd_reset(void)
 /* dpd初始化 */
 void dpd_init(void)
 {
-    // if (tmp == 1)
-    int i, k;
-    for (k = 0; k < 3; k++)
+    int re_val;
+    re_val = CODEPOINTER(128);
+    if (re_val != 4)
     {
-        dpd_reset(1);
-        i = CODEPOINTER(125);
-        if (i == 2)
+        int i, k;
+        for (k = 0; k < 3; k++)
         {
-            system("/usr/bin/dpd-smp -u 0 &");
-            i = CODEPOINTER(130);
-            fprintf(stdout, "DPD init successful.\n");
-            k = 3;
+            dpd_reset();
+            i = CODEPOINTER(125);
+            if (i == 2)
+            {
+                system("/usr/bin/dpd-smp -u 0 &");
+                i = CODEPOINTER(130);
+                fprintf(stdout, "DPD init successful.\n");
+                k = 3;
+            }
         }
     }
     // if (tmp == 0)
