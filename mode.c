@@ -73,41 +73,40 @@ void dpd_mode_read(void)
 /*  */
 static void dpd_date(void)
 {
-    updae_ecf_parameters dpd_date_team;
-    dpd_date_team.CORRECTION_BW_OLD = 100;
-    dpd_date_team.DAMPINGVALUE_OLD = 1;
-    dpd_date_team.ENABLELINEARCORRECTION_OLD = 1;
-    dpd_date_team.LEAKAGEVALUE_OLD = 0.6;
-    dpd_date_team.LS_REGULARIZATION_OLD = -16;
-    dpd_date_team.MAXDELAY_OLD = 1300;
-    dpd_date_team.MINDELAY_OLD = 300;
-    dpd_date_team.RXINPUTFORMAT_OLD = 1;
-    dpd_date_team.RXPHASESTEP_OLD = 0;
-    dpd_date_team.SAMPLES2PROCESS_OLD = 0;
-    dpd_date_team.SPECTRALINVERSION_OLD = 1;
-    dpd_date_team.TXRXRATIO_OLD = 1;
-    dpd_date_changce(dpd_date_team);
+    // dpd_date_team.CORRECTION_BW_OLD = 100;
+    // dpd_date_team.DAMPINGVALUE_OLD = 1;
+    // dpd_date_team.ENABLELINEARCORRECTION_OLD = 1;
+    // dpd_date_team.LEAKAGEVALUE_OLD = 0.6;
+    // dpd_date_team.LS_REGULARIZATION_OLD = -16;
+    // dpd_date_team.MAXDELAY_OLD = 1300;
+    // dpd_date_team.MINDELAY_OLD = 300;
+    // dpd_date_team.RXINPUTFORMAT_OLD = 1;
+    // dpd_date_team.RXPHASESTEP_OLD = 0;
+    // dpd_date_team.SAMPLES2PROCESS_OLD = 0;
+    // dpd_date_team.SPECTRALINVERSION_OLD = 1;
+    // dpd_date_team.TXRXRATIO_OLD = 1;
 }
 
 /* 计算传进来模式设置的值对应的16进制 */
-static void dpd_date_changce(updae_ecf_parameters date)
+static void dpd_date(void)
 {
-    updae_ecf_parameters_changce dpd_date;
-    dpd_date.SAMPLES2PROCESS = 0x2000;
-    dpd_date.LEAKAGEVALUE = 0x4F7CED91;
-    dpd_date.DAMPINGVALUE = 0x80000000;
-    dpd_date.LS_REGULARIZATION = 0xFFFFFFF0;
-    dpd_date.TXRXRATIO = 0x00000001;
-    dpd_date.RXINPUTFORMAT = 0x00000001;
-    dpd_date.SPECTRALINVERSION = 0x00000000;
-    dpd_date.RXPHASESTEP = 0x00000000;
-    dpd_date.CORRECTION_BW = 0x00000064;
-    dpd_date.ENABLELINEARCORRECTION = 0x00000001;
-    dpd_date.MAXDELAY = 0x00000514;
-    dpd_date.MINDELAY = 0x0000012C;
+    update_ecf_parameters dpd_date;
+    // dpd_date.SAMPLES2PROCESS = 0x2000;
+    // dpd_date.LEAKAGEVALUE = 0x4F7CED91;
+    // dpd_date.DAMPINGVALUE = 0x80000000;
+    // dpd_date.LS_REGULARIZATION = 0xFFFFFFF0;
+    // dpd_date.TXRXRATIO = 0x00000001;
+    // dpd_date.RXINPUTFORMAT = 0x00000001;
+    // dpd_date.SPECTRALINVERSION = 0x00000000;
+    // dpd_date.RXPHASESTEP = 0x00000000;
+    // dpd_date.CORRECTION_BW = 0x00000064;
+    // dpd_date.ENABLELINEARCORRECTION = 0x00000001;
+    // dpd_date.MAXDELAY = 0x00000514;
+    // dpd_date.MINDELAY = 0x0000012C;
+    u_int32_t dpd_date_team[];
 }
 
-void dpd_mode_set(updae_ecf_parameters_changce date)
+void dpd_mode_set(updae_ecf_parameters date)
 {
     register_write(DPD_DATA, date.SAMPLES2PROCESS);
 }
