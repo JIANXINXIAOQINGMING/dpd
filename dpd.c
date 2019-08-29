@@ -22,10 +22,10 @@ int main(int argc, char *argv[])
 {
     int next_option = 1;
 
-    const char *const short_options = "hsod";
+    const char *const short_options = "hs:od";
     const struct option long_options[] = {
         {"help", 0, NULL, 'h'},
-        {"start", 0, NULL, 's'},
+        {"start", 1, NULL, 's'},
         {"stop", 0, NULL, 'o'},
         {"debug", 0, NULL, 'd'},
         {NULL, 0, NULL, 0}};
@@ -38,13 +38,16 @@ int main(int argc, char *argv[])
         case 'h':
             print_usage(stdout, 0);
         case 's':
-            dpd_init();
+            dpd_init(atoi(optarg));
+            dpd_mode();
+            dpd_run();
             // dpd_mode_set();
             break;
         case 'o':
+            dpd_close();
             break;
         case 'd':
-            COMMANDSTATUS(114);
+            COMMANDSTATUS();
             break;
         }
     }

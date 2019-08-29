@@ -20,7 +20,7 @@ static void dpd_reset(void)
 }
 
 /* dpd初始化 */
-void dpd_init(void)
+void dpd_init(int tmp)
 {
     int re_val;
     re_val = CODEPOINTER(128);
@@ -33,7 +33,15 @@ void dpd_init(void)
             i = CODEPOINTER(125);
             if (i == 2)
             {
-                system("/usr/bin/dpd-smp -u 0 &");
+                switch (tmp)
+                {
+                case 0:
+                    system("dpd-smp -u 0 &");
+                    break;
+                case 1:
+                    system("dpd-smp -u 1 &");
+                    break;
+                }
                 i = CODEPOINTER(130);
                 fprintf(stdout, "DPD init successful.\n");
                 k = 3;

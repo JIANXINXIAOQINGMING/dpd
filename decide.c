@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <stdio.h>
 #include "address.h"
 #include "read_write.h"
 #include "dpd_err.h"
@@ -39,32 +40,20 @@ int CODEPOINTER(int tmp)
     return re_value;
 }
 
-void COMMANDSTATUS(int tmp)
+int COMMANDSTATUS(void)
 {
     int k;
     int re_val;
-    while ((k++) < CTIME)
-    {
-        re_val = register_read(CODEPOINTER_VAL);
-        if (tmp == re_val || tmp == 114)
-        {
-            k = SUCCESS;
-            switch (tmp)
-            {
-            case 2:
-                break;
-            case 114:
-                dpd_error(COMMANDSTATUS_VAL, re_val);
-                break;
-            }
-        }
-    }
+    re_val = register_read(COMMANDSTATUS_VAL);
+    dpd_error(COMMANDSTATUS_VAL, re_val);
+    return re_val;
 }
 
 int TRIGGERACK(int tmp)
 {
-    int re_val;
-    int i, k = 0;
+    volatile int re_val;
+    int i, j;
+    int k = 0;
     if (tmp == 1)
     {
         register_write(CONTROLMODETRIGGER, 0xabcdef12);
@@ -77,7 +66,12 @@ int TRIGGERACK(int tmp)
             if (tmp == 0)
             {
                 k = SUCCESS;
-                COMMANDSTATUS(114);
+                i = CODEPOINTER(128);
+                if (i == 4)
+                {
+                    j = COMMANDSTATUS();
+                    return j;
+                }
             }
             if (tmp == 1)
             {
@@ -87,8 +81,8 @@ int TRIGGERACK(int tmp)
                 {
                     register_write(CONTROLMODETRIGGER, 0);
                 }
+                return k;
             }
         }
     }
-    return k;
 }

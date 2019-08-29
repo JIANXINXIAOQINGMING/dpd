@@ -17,4 +17,13 @@ typedef struct UPDATE_ECF_PARAMETERS
     int MINDELAY;
 } update_ecf_parameters;
 
+typedef struct UPDATE_ARCH_PARAMETERS
+{
+    u_int32_t ARCH_SEL;
+    int DATAPATH_GAIN;
+} update_arch_parameters;
+
+extern void dpd_mode(void);
+extern void dpd_run(void);
+extern void dpd_close(void);
 #endif
