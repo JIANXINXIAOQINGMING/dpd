@@ -10,6 +10,23 @@
 #include "decide.h"
 #include "mode.h"
 
+static update_ecf_parameters mode_init_date =
+    {
+        .SAMPLES2PROCESS = 8192,
+        .LEAKAGEVALUE = 0.6,
+        .DAMPINGVALUE = 1,
+        .LS_REGULARIZATION = -16,
+        .TXRXRATIO = 1,
+        .RXINPUTFORMAT = 1,
+        .SPECTRALINVERSION = 0,
+        .RXPHASESTEP = 0,
+        .CORRECTION_BW = 100,
+        .ENABLELINEARCORRECTION = 1,
+        .MAXDELAY = 1300,
+        .MINDELAY = 300};
+
+static update_ecf_parameters dpd_tmp;
+
 static char *substr(const char *str,
                     unsigned start, unsigned end)
 {
@@ -43,58 +60,56 @@ void dpd_mode_read(void)
         if (!fp)
         {
             fprintf(stdout, "Error:don't find dpd.config");
-            exit(1);
+            data_competion(mode_init_date);
+            dpd_update_ecf_parameters();
+            dpd_update_arch_parameters();
         }
-        fread(p, 1, 1500, fp);
-        z = regcomp(&tmp, rule, REG_ICASE);
-        if (z != 0)
+        else
         {
-            regerror(z, &tmp, ebuf, sizeof(ebuf));
-            fprintf(stderr, "%s: pattern '%s' \n", ebuf, rule);
-            return 1;
+            // fread(p, 1, 1500, fp);
+            // z = regcomp(&tmp, rule, REG_ICASE);
+            // if (z != 0)
+            // {
+            //     regerror(z, &tmp, ebuf, sizeof(ebuf));
+            //     fprintf(stderr, "%s: pattern '%s' \n", ebuf, rule);
+            //     return 1;
+            // }
+            // regexec(&tmp, p, si, kk, 0);
+            // buff = substr(p, kk[0].rm_so, kk[0].rm_eo);
+            // i = atoi(buff);
+            // regfree(&tmp);
+            // // register_write(CONTROLMODEREGISTER, );
+            // register_write(PORTNUM, 0x00);
+            // k = TRIGGERACK(1);
+            // if (k == SUCCESS)
+            // {
+            //     j = TRIGGERACK(0);
+            //     if (j == SUCCESS)
+            //     {
+            //         printf("DPD mode successful!");
+            //     }
+            // }
         }
-        regexec(&tmp, p, si, kk, 0);
-        buff = substr(p, kk[0].rm_so, kk[0].rm_eo);
-        i = atoi(buff);
-        regfree(&tmp);
-        // register_write(CONTROLMODEREGISTER, );
-        register_write(PORTNUM, 0x00);
-        k = TRIGGERACK(1);
-        if (k == SUCCESS)
-        {
-            j = TRIGGERACK(0);
-            if (j == SUCCESS)
-            {
-                printf("DPD mode successful!");
-            }
-        }
+        close(fp);
+        free(p);
+        free(ebuf);
     }
 }
-
-/*  */
-// static void dpd_date(void)
-// {
-//     // dpd_date_team.CORRECTION_BW_OLD = 100;
-//     // dpd_date_team.DAMPINGVALUE_OLD = 1;
-//     // dpd_date_team.ENABLELINEARCORRECTION_OLD = 1;
-//     // dpd_date_team.LEAKAGEVALUE_OLD = 0.6;
-//     // dpd_date_team.LS_REGULARIZATION_OLD = -16;
-//     // dpd_date_team.MAXDELAY_OLD = 1300;
-//     // dpd_date_team.MINDELAY_OLD = 300;
-//     // dpd_date_team.RXINPUTFORMAT_OLD = 1;
-//     // dpd_date_team.RXPHASESTEP_OLD = 0;
-//     // dpd_date_team.SAMPLES2PROCESS_OLD = 0;
-//     // dpd_date_team.SPECTRALINVERSION_OLD = 1;
-//     // dpd_date_team.TXRXRATIO_OLD = 1;
-// }
 
 /* 计算传进来模式设置的值对应的16进制 */
 void dpd_mode(void)
 {
+    dpd_mode_read();
     dpd_update_ecf_parameters();
     dpd_update_arch_parameters();
 }
 
+/* 写入的实际数据转换为dpd控制数据 */
+int data_competion(char *data)
+{
+}
+
+/* dpd第43钟模式的赋值 */
 void dpd_update_ecf_parameters(void)
 {
     volatile int i = 12;
@@ -129,6 +144,7 @@ void dpd_update_ecf_parameters(void)
     dpd_mode_set(dpd_date_team, i, mode);
 }
 
+/* 第45种模式 dpd数据的写入 */
 void dpd_update_arch_parameters(void)
 {
     volatile int i = 2;
@@ -143,6 +159,7 @@ void dpd_update_arch_parameters(void)
     dpd_mode_set(dpd_date_team, i, mode);
 }
 
+/* 存完数据之后，启动dpd */
 void dpd_run(void)
 {
     register_write(CONTROLMODEREGISTER, 0x6);
@@ -153,6 +170,7 @@ void dpd_run(void)
     COMMANDSTATUS();
 }
 
+/* 关闭dpd，清除存入的dpd数据 */
 void dpd_close(void)
 {
     int mode[2] = {8, 9};
@@ -168,6 +186,7 @@ void dpd_close(void)
     }
 }
 
+/*  把得到的数据写入dpd的数据寄存器 */
 int dpd_mode_set(u_int32_t *date, int i, int mode)
 {
     int k, j;
