@@ -10,20 +10,25 @@
 #include "decide.h"
 #include "mode.h"
 
-static update_ecf_parameters mode_init_date =
+static update_ecf_parameters mode_init_date_1 =
     {
-        .SAMPLES2PROCESS = 8192,
-        .LEAKAGEVALUE = 0.6,
-        .DAMPINGVALUE = 1,
-        .LS_REGULARIZATION = -16,
-        .TXRXRATIO = 1,
-        .RXINPUTFORMAT = 1,
-        .SPECTRALINVERSION = 0,
-        .RXPHASESTEP = 0,
-        .CORRECTION_BW = 100,
-        .ENABLELINEARCORRECTION = 1,
-        .MAXDELAY = 1300,
-        .MINDELAY = 300};
+        .samples2process = 8192,
+        .leakagevalue = 0.4,
+        .dampingvalue = 1,
+        .ls_regularization = -16,
+        .txrxratio = 1,
+        .rxinputformat = 1,
+        .spectralinversion = 0,
+        .rxphasestep = 0,
+        .correction_bw = 100,
+        .enablelinearcorrection = 1,
+        .maxdelay = 1300,
+        .mindelay = 300};
+
+static update_arch_parameters mode_init_date_2 =
+    {
+        .arch_sel = 0x0013,
+        .data_competion = 0x01};
 
 static update_ecf_parameters dpd_tmp;
 
@@ -59,10 +64,10 @@ void dpd_mode_read(void)
         fp = fopen("/home/root/dpd.config", "r");
         if (!fp)
         {
-            fprintf(stdout, "Error:don't find dpd.config");
-            data_competion(mode_init_date);
-            dpd_update_ecf_parameters();
-            dpd_update_arch_parameters();
+            fprintf(stdout, "Error:don't find dpd.config,use acquiesce in config");
+            data_competion(mode_init_date_1);
+            dpd_update_ecf_parameters(dpd_tmp);
+            dpd_update_arch_parameters(mode_init_date_2);
         }
         else
         {
@@ -100,62 +105,109 @@ void dpd_mode_read(void)
 void dpd_mode(void)
 {
     dpd_mode_read();
-    dpd_update_ecf_parameters();
-    dpd_update_arch_parameters();
+}
+
+static int sum(u_int32_t kid)
+{
+    u_int32_t leak_sum;
+    int num[9], i;
+
+    for (i = 0; i < 9; i++)
+    {
+        switch (i)
+        {
+        case 0:
+            num[i] = kid / 100000000;
+            break;
+        case 1:
+            num[i] = kid / 10000000 % 10;
+            break;
+        case 2:
+            num[i] = kid / 1000000 % 100 % 10;
+            break;
+        case 3:
+            num[i] = kid / 100000 % 1000 % 100 % 10;
+            break;
+        case 4:
+            num[i] = kid / 10000 % 10000 % 1000 % 100 % 10;
+            break;
+        case 5:
+            num[i] = kid / 1000 % 100000 % 10000 % 1000 % 100 % 10;
+            break;
+        case 6:
+            num[i] = kid / 100 % 1000000 % 100000 % 10000 % 1000 % 100 % 10;
+            break;
+        case 7:
+            num[i] = kid / 10 % 10000000 % 100000 % 10000 % 1000 % 100 % 10;
+        case 8:
+            num[i] = kid % 100000000 % 10000000 % 100000 % 10000 % 1000 % 100 % 10;
+            break;
+        }
+    }
+    leak_sum = num[0] * PRECISION1 + num[1] * PRECISION2 + num[2] * PRECISION3 + num[3] * PRECISION4 + num[4] * PRECISION5 + num[5] * PRECISION6 + num[6] * PRECISION7 + num[7] * PRECISION8 + num[8] * PRECISION9;
+    return leak_sum;
 }
 
 /* 写入的实际数据转换为dpd控制数据 */
-int data_competion(char *data)
+int data_competion(update_ecf_parameters data)
 {
+    u_int32_t k;
+    int num[9], i;
+
+    dpd_tmp.samples2process = data.samples2process;
+
+    volatile k = data.leakagevalue * 1000000000;
+    dpd_tmp.leakagevalue = sum(k);
+    volatile k = data.dampingvalue * 1000000000;
+    dpd_tmp.dampingvalue = sum(k);
+
+    dpd_tmp.ls_regularization = data.ls_regularization;
 }
 
-/* dpd第43钟模式的赋值 */
-void dpd_update_ecf_parameters(void)
+/* dpd第43种模式的赋值 */
+void dpd_update_ecf_parameters(update_ecf_parameters dpd_date)
 {
     volatile int i = 12;
     volatile int mode = 43;
-    update_ecf_parameters dpd_date;
-    dpd_date.SAMPLES2PROCESS = 0x2000;
-    dpd_date.LEAKAGEVALUE = 0x4F7CED91;
-    dpd_date.DAMPINGVALUE = 0x80000000;
-    dpd_date.LS_REGULARIZATION = 0xFFFFFFF0;
-    dpd_date.TXRXRATIO = 0x00000001;
-    dpd_date.RXINPUTFORMAT = 0x00000001;
-    dpd_date.SPECTRALINVERSION = 0x00000000;
-    dpd_date.RXPHASESTEP = 0x00000000;
-    dpd_date.CORRECTION_BW = 0x00000064;
-    dpd_date.ENABLELINEARCORRECTION = 0x00000001;
-    dpd_date.MAXDELAY = 0x00000514;
-    dpd_date.MINDELAY = 0x0000012C;
+    // update_ecf_parameters dpd_date;
+    // dpd_date.SAMPLES2PROCESS = 0x2000;
+    // dpd_date.LEAKAGEVALUE = 0x4F7CED91;
+    // dpd_date.DAMPINGVALUE = 0x80000000;
+    // dpd_date.LS_REGULARIZATION = 0xFFFFFFF0;
+    // dpd_date.TXRXRATIO = 0x00000001;
+    // dpd_date.RXINPUTFORMAT = 0x00000001;
+    // dpd_date.SPECTRALINVERSION = 0x00000000;
+    // dpd_date.RXPHASESTEP = 0x00000000;
+    // dpd_date.CORRECTION_BW = 0x00000064;
+    // dpd_date.ENABLELINEARCORRECTION = 0x00000001;
+    // dpd_date.MAXDELAY = 0x00000514;
+    // dpd_date.MINDELAY = 0x0000012C;
 
     u_int32_t dpd_date_team[i];
-    dpd_date_team[0] = dpd_date.SAMPLES2PROCESS;
-    dpd_date_team[1] = dpd_date.LEAKAGEVALUE;
-    dpd_date_team[2] = dpd_date.DAMPINGVALUE;
-    dpd_date_team[3] = dpd_date.LS_REGULARIZATION;
-    dpd_date_team[4] = dpd_date.TXRXRATIO;
-    dpd_date_team[5] = dpd_date.RXINPUTFORMAT;
-    dpd_date_team[6] = dpd_date.SPECTRALINVERSION;
-    dpd_date_team[7] = dpd_date.RXPHASESTEP;
-    dpd_date_team[8] = dpd_date.CORRECTION_BW;
-    dpd_date_team[9] = dpd_date.ENABLELINEARCORRECTION;
-    dpd_date_team[10] = dpd_date.MAXDELAY;
-    dpd_date_team[11] = dpd_date.MINDELAY;
+    dpd_date_team[0] = dpd_date.samples2process;
+    dpd_date_team[1] = dpd_date.leakagevalue;
+    dpd_date_team[2] = dpd_date.dampingvalue;
+    dpd_date_team[3] = dpd_date.ls_regularization;
+    dpd_date_team[4] = dpd_date.txrxratio;
+    dpd_date_team[5] = dpd_date.rxinputformat;
+    dpd_date_team[6] = dpd_date.spectralinversion;
+    dpd_date_team[7] = dpd_date.rxphasestep;
+    dpd_date_team[8] = dpd_date.correction_bw;
+    dpd_date_team[9] = dpd_date.enablelinearcorrection;
+    dpd_date_team[10] = dpd_date.maxdelay;
+    dpd_date_team[11] = dpd_date.mindelay;
     dpd_mode_set(dpd_date_team, i, mode);
 }
 
 /* 第45种模式 dpd数据的写入 */
-void dpd_update_arch_parameters(void)
+void dpd_update_arch_parameters(update_arch_parameters dpd_date)
 {
     volatile int i = 2;
     volatile int mode = 45;
-    update_arch_parameters dpd_date;
-    dpd_date.ARCH_SEL = 0x0013;
-    dpd_date.DATAPATH_GAIN = 0x01;
 
     u_int32_t dpd_date_team[i];
-    dpd_date_team[0] = dpd_date.ARCH_SEL;
-    dpd_date_team[1] = dpd_date.DATAPATH_GAIN;
+    dpd_date_team[0] = dpd_date.arch_sel;
+    dpd_date_team[1] = dpd_date.data_competion;
     dpd_mode_set(dpd_date_team, i, mode);
 }
 
@@ -200,7 +252,7 @@ int dpd_mode_set(u_int32_t *date, int i, int mode)
     k = TRIGGERACK(1);
     if (k == SUCCESS)
     {
-        for (k = 0; k < 5; k++)
+        for (k = 0; k < 20; k++)
         {
             j = TRIGGERACK(0);
             if (j == 2)
