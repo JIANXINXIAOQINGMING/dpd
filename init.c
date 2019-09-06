@@ -11,10 +11,6 @@
 static void dpd_reset(void)
 {
     register_write(DPD_RESET, 0x00);
-    // if (i == 0)
-    // {
-    //     system("killall /usr/bin/dpd-smp");
-    // }
     sleep(0.5);
     register_write(DPD_RESET, 0x01);
 }
@@ -48,10 +44,4 @@ void dpd_init(int tmp)
             }
         }
     }
-    // if (tmp == 0)
-    // {
-    //     dpd_reset(0);
-    //     dpd_init(1);
-    //     fprintf(stdout, "reset successful.");
-    // }
 }

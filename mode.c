@@ -1,6 +1,5 @@
 /* 正则表达式的库 */
 #include <sys/types.h>
-#include <regex.h>
 #include <stdio.h>
 /* 打开文件的库 */
 #include <stdlib.h>
@@ -10,10 +9,10 @@
 #include "decide.h"
 #include "mode.h"
 
-static update_ecf_parameters mode_init_date_1 =
+static ecf_parameters mode_init_date_1 =
     {
         .samples2process = 8192,
-        .leakagevalue = 0.4,
+        .leakagevalue = 0.621,
         .dampingvalue = 1,
         .ls_regularization = -16,
         .txrxratio = 1,
@@ -25,79 +24,21 @@ static update_ecf_parameters mode_init_date_1 =
         .maxdelay = 1300,
         .mindelay = 300};
 
-static update_arch_parameters mode_init_date_2 =
+static arch_parameters mode_init_date_2 =
     {
-        .arch_sel = 0x0013,
+        .arch_sel = 0x0019,
         .data_competion = 0x01};
-
-static update_ecf_parameters dpd_tmp;
-
-static char *substr(const char *str,
-                    unsigned start, unsigned end)
-{
-    unsigned n = end - start;
-    static char stbuf[256];
-    strncpy(stbuf, str + start, n);
-    stbuf[n] = 0;
-    return stbuf;
-}
 
 /* dpd模式设置 */
 void dpd_mode_read(void)
 {
     int re_val;
-    int k, j, z;
-    u_int32_t i;
-    FILE *fp;
-    char *p, *ebuf, *buff;
-    p = malloc(1500);
-    ebuf = malloc(100);
-
-    regex_t tmp;
-    const char *rule = "[0-9]";
-    const size_t si = 1;
-    regmatch_t kk[250], ss[250];
 
     re_val = CODEPOINTER(128);
     if (re_val == 4)
     {
-        fp = fopen("/home/root/dpd.config", "r");
-        if (!fp)
-        {
-            fprintf(stdout, "Error:don't find dpd.config,use acquiesce in config");
-            data_competion(mode_init_date_1);
-            dpd_update_ecf_parameters(dpd_tmp);
-            dpd_update_arch_parameters(mode_init_date_2);
-        }
-        else
-        {
-            // fread(p, 1, 1500, fp);
-            // z = regcomp(&tmp, rule, REG_ICASE);
-            // if (z != 0)
-            // {
-            //     regerror(z, &tmp, ebuf, sizeof(ebuf));
-            //     fprintf(stderr, "%s: pattern '%s' \n", ebuf, rule);
-            //     return 1;
-            // }
-            // regexec(&tmp, p, si, kk, 0);
-            // buff = substr(p, kk[0].rm_so, kk[0].rm_eo);
-            // i = atoi(buff);
-            // regfree(&tmp);
-            // // register_write(CONTROLMODEREGISTER, );
-            // register_write(PORTNUM, 0x00);
-            // k = TRIGGERACK(1);
-            // if (k == SUCCESS)
-            // {
-            //     j = TRIGGERACK(0);
-            //     if (j == SUCCESS)
-            //     {
-            //         printf("DPD mode successful!");
-            //     }
-            // }
-        }
-        close(fp);
-        free(p);
-        free(ebuf);
+        dpd_update_ecf_parameters(mode_init_date_1);
+        dpd_update_arch_parameters(mode_init_date_2);
     }
 }
 
@@ -107,108 +48,125 @@ void dpd_mode(void)
     dpd_mode_read();
 }
 
-static int sum(u_int32_t kid)
-{
-    u_int32_t leak_sum;
-    int num[9], i;
-
-    for (i = 0; i < 9; i++)
-    {
-        switch (i)
-        {
-        case 0:
-            num[i] = kid / 100000000;
-            break;
-        case 1:
-            num[i] = kid / 10000000 % 10;
-            break;
-        case 2:
-            num[i] = kid / 1000000 % 100 % 10;
-            break;
-        case 3:
-            num[i] = kid / 100000 % 1000 % 100 % 10;
-            break;
-        case 4:
-            num[i] = kid / 10000 % 10000 % 1000 % 100 % 10;
-            break;
-        case 5:
-            num[i] = kid / 1000 % 100000 % 10000 % 1000 % 100 % 10;
-            break;
-        case 6:
-            num[i] = kid / 100 % 1000000 % 100000 % 10000 % 1000 % 100 % 10;
-            break;
-        case 7:
-            num[i] = kid / 10 % 10000000 % 100000 % 10000 % 1000 % 100 % 10;
-        case 8:
-            num[i] = kid % 100000000 % 10000000 % 100000 % 10000 % 1000 % 100 % 10;
-            break;
-        }
-    }
-    leak_sum = num[0] * PRECISION1 + num[1] * PRECISION2 + num[2] * PRECISION3 + num[3] * PRECISION4 + num[4] * PRECISION5 + num[5] * PRECISION6 + num[6] * PRECISION7 + num[7] * PRECISION8 + num[8] * PRECISION9;
-    return leak_sum;
-}
-
-/* 写入的实际数据转换为dpd控制数据 */
-int data_competion(update_ecf_parameters data)
-{
-    u_int32_t k;
-    int num[9], i;
-
-    dpd_tmp.samples2process = data.samples2process;
-
-    volatile k = data.leakagevalue * 1000000000;
-    dpd_tmp.leakagevalue = sum(k);
-    volatile k = data.dampingvalue * 1000000000;
-    dpd_tmp.dampingvalue = sum(k);
-
-    dpd_tmp.ls_regularization = data.ls_regularization;
-}
-
 /* dpd第43种模式的赋值 */
-void dpd_update_ecf_parameters(update_ecf_parameters dpd_date)
+void dpd_update_ecf_parameters(ecf_parameters ecf_old_data)
 {
-    volatile int i = 12;
-    volatile int mode = 43;
-    // update_ecf_parameters dpd_date;
-    // dpd_date.SAMPLES2PROCESS = 0x2000;
-    // dpd_date.LEAKAGEVALUE = 0x4F7CED91;
-    // dpd_date.DAMPINGVALUE = 0x80000000;
-    // dpd_date.LS_REGULARIZATION = 0xFFFFFFF0;
-    // dpd_date.TXRXRATIO = 0x00000001;
-    // dpd_date.RXINPUTFORMAT = 0x00000001;
-    // dpd_date.SPECTRALINVERSION = 0x00000000;
-    // dpd_date.RXPHASESTEP = 0x00000000;
-    // dpd_date.CORRECTION_BW = 0x00000064;
-    // dpd_date.ENABLELINEARCORRECTION = 0x00000001;
-    // dpd_date.MAXDELAY = 0x00000514;
-    // dpd_date.MINDELAY = 0x0000012C;
+    u_int32_t ecf_data[12];
 
-    u_int32_t dpd_date_team[i];
-    dpd_date_team[0] = dpd_date.samples2process;
-    dpd_date_team[1] = dpd_date.leakagevalue;
-    dpd_date_team[2] = dpd_date.dampingvalue;
-    dpd_date_team[3] = dpd_date.ls_regularization;
-    dpd_date_team[4] = dpd_date.txrxratio;
-    dpd_date_team[5] = dpd_date.rxinputformat;
-    dpd_date_team[6] = dpd_date.spectralinversion;
-    dpd_date_team[7] = dpd_date.rxphasestep;
-    dpd_date_team[8] = dpd_date.correction_bw;
-    dpd_date_team[9] = dpd_date.enablelinearcorrection;
-    dpd_date_team[10] = dpd_date.maxdelay;
-    dpd_date_team[11] = dpd_date.mindelay;
-    dpd_mode_set(dpd_date_team, i, mode);
+    ecf_data[0] = ecf_old_data.samples2process;
+
+    /* leakagevalue 范围在0~1 */
+    if (ecf_old_data.leakagevalue <= 1 && ecf_old_data.leakagevalue >= 0)
+    {
+        ecf_data[1] = ecf_old_data.leakagevalue * PRECISION;
+    }
+    else
+    {
+        printf("Error: ecf data leakagevalue Data Out of range");
+        exit(1);
+    }
+
+    /* dampingvalue 范围在0~1 */
+    if (ecf_old_data.dampingvalue <= 1 && ecf_old_data.dampingvalue >= 0)
+    {
+        ecf_data[2] = ecf_old_data.dampingvalue * PRECISION;
+    }
+    else
+    {
+        printf("Error: ecf data dampingvalue Data Out of range");
+        exit(1);
+    }
+
+    /*ls_regularization 范围在50 ~100 */
+    if (ecf_old_data.ls_regularization <= 0 && ecf_old_data.ls_regularization >= -32)
+    {
+        ecf_data[3] = ecf_old_data.ls_regularization;
+    }
+    else
+    {
+        printf("Error: ecf data ls_regularization Data Out of range");
+        exit(1);
+    }
+
+    /* txrxratio 范围在1 or 2 */
+    if (ecf_old_data.txrxratio == 1 || ecf_old_data.txrxratio == 2)
+    {
+        ecf_data[4] = ecf_old_data.txrxratio;
+    }
+    else
+    {
+        printf("Error: ecf data txrxratio Data Out of range");
+        exit(1);
+    }
+
+    /* rxinputformat 范围在0 or 1 */
+    if (ecf_old_data.rxinputformat == 0 || ecf_old_data.rxinputformat == 1)
+    {
+        ecf_data[5] = ecf_old_data.rxinputformat;
+    }
+    else
+    {
+        printf("Error: ecf data rxinputformat Data Out of range");
+        exit(1);
+    }
+
+    /* SPECTRALINVERSION  范围在0 or 1 */
+    if (ecf_old_data.spectralinversion == 0 || ecf_old_data.spectralinversion == 1)
+    {
+        ecf_data[6] = ecf_old_data.spectralinversion;
+    }
+    else
+    {
+        printf("Error: ecf data spectralinversion Data Out of range");
+        exit(1);
+    }
+
+    ecf_data[7] = ecf_old_data.rxphasestep * PRECISION1RX;
+
+    /* CORRECTION_BW 范围在50~100 */
+    if (ecf_old_data.correction_bw >= 50 && ecf_old_data.correction_bw <= 100)
+    {
+        ecf_data[8] = ecf_old_data.correction_bw;
+    }
+    else
+    {
+        printf("Error: ecf data correction_bw Data Out of range");
+        exit(1);
+    }
+
+    /* enablelinearcorrection 范围在0 or 1 */
+    if (ecf_old_data.enablelinearcorrection == 0 || ecf_old_data.enablelinearcorrection == 1)
+    {
+        ecf_data[9] = ecf_old_data.enablelinearcorrection;
+    }
+    else
+    {
+        printf("Error: ecf data enablelinearcorrection Data Out of range");
+        exit(1);
+    }
+
+    ecf_data[10] = ecf_old_data.maxdelay;
+    ecf_data[11] = ecf_old_data.mindelay;
+    dpd_mode_set(ecf_data, 12, 43);
 }
 
 /* 第45种模式 dpd数据的写入 */
-void dpd_update_arch_parameters(update_arch_parameters dpd_date)
+void dpd_update_arch_parameters(arch_parameters arch_old_data)
 {
-    volatile int i = 2;
-    volatile int mode = 45;
+    u_int32_t arch_data[2];
 
-    u_int32_t dpd_date_team[i];
-    dpd_date_team[0] = dpd_date.arch_sel;
-    dpd_date_team[1] = dpd_date.data_competion;
-    dpd_mode_set(dpd_date_team, i, mode);
+    arch_data[0] = arch_old_data.arch_sel;
+
+    if (arch_old_data.data_competion == 1 || arch_old_data.data_competion == 2)
+    {
+        arch_data[1] = arch_old_data.data_competion;
+    }
+    else
+    {
+        printf("Error: arch data data_competion Data Out of range");
+        exit(1);
+    }
+    dpd_mode_set(arch_data, 2, 45);
 }
 
 /* 存完数据之后，启动dpd */
