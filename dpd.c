@@ -21,6 +21,7 @@ void print_usage(FILE *stream, int exit_code)
 int main(int argc, char *argv[])
 {
     int next_option = 1;
+    int re_val;
 
     const char *const short_options = "hs:od";
     const struct option long_options[] = {
@@ -39,9 +40,11 @@ int main(int argc, char *argv[])
             print_usage(stdout, 0);
         case 's':
             dpd_init(atoi(optarg));
-            dpd_mode();
-            dpd_run();
-            // dpd_mode_set();
+            re_val = dpd_mode();
+            if (re_val == 1)
+            {
+                dpd_run();
+            }
             break;
         case 'o':
             dpd_close();

@@ -10,6 +10,7 @@
 /* dpd信号复位 */
 static void dpd_reset(void)
 {
+    system("ps -ef | grep dpd-smp | grep -v grep | awk '{print $1}' | xargs --no-run-if-empty kill");
     register_write(DPD_RESET, 0x00);
     sleep(0.5);
     register_write(DPD_RESET, 0x01);
@@ -19,28 +20,27 @@ static void dpd_reset(void)
 void dpd_init(int tmp)
 {
     int re_val;
-    re_val = CODEPOINTER(128);
-    if (re_val != 4)
+    int i, k;
+    for (k = 0; k < 3; k++)
     {
-        int i, k;
-        for (k = 0; k < 3; k++)
+        dpd_reset();
+        re_val = CODEPOINTER(125);
+        switch (tmp)
         {
-            dpd_reset();
-            i = CODEPOINTER(125);
-            if (i == 2)
+        case 0:
+            system("dpd-smp -u 0 &");
+            break;
+        case 1:
+            system("dpd-smp -u 1 &");
+            break;
+        }
+        if (re_val == 2)
+        {
+            i = CODEPOINTER(130);
+            if (i == 3)
             {
-                switch (tmp)
-                {
-                case 0:
-                    system("dpd-smp -u 0 &");
-                    break;
-                case 1:
-                    system("dpd-smp -u 1 &");
-                    break;
-                }
-                i = CODEPOINTER(130);
                 fprintf(stdout, "DPD init successful.\n");
-                k = 3;
+                return 0;
             }
         }
     }

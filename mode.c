@@ -26,32 +26,48 @@ static ecf_parameters mode_init_date_1 =
 
 static arch_parameters mode_init_date_2 =
     {
-        .arch_sel = 0x0019,
+        .arch_sel = 0x0013,
         .data_competion = 0x01};
 
 /* dpd模式设置 */
-void dpd_mode_read(void)
+int dpd_mode_read(void)
 {
-    int re_val;
+    int re_val, k;
+    int j, i;
 
     re_val = CODEPOINTER(128);
     if (re_val == 4)
     {
-        dpd_update_ecf_parameters(mode_init_date_1);
-        dpd_update_arch_parameters(mode_init_date_2);
+        j = dpd_update_ecf_parameters(mode_init_date_1);
+        i = dpd_update_arch_parameters(mode_init_date_2);
+        if (j == SUCCESS && i == SUCCESS)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    else
+    {
+        exit(1);
     }
 }
 
 /* 计算传进来模式设置的值对应的16进制 */
-void dpd_mode(void)
+int dpd_mode(void)
 {
-    dpd_mode_read();
+    int re_val;
+    re_val = dpd_mode_read();
+    return re_val;
 }
 
 /* dpd第43种模式的赋值 */
-void dpd_update_ecf_parameters(ecf_parameters ecf_old_data)
+int dpd_update_ecf_parameters(ecf_parameters ecf_old_data)
 {
     u_int32_t ecf_data[12];
+    int re_val;
 
     ecf_data[0] = ecf_old_data.samples2process;
 
@@ -147,13 +163,15 @@ void dpd_update_ecf_parameters(ecf_parameters ecf_old_data)
 
     ecf_data[10] = ecf_old_data.maxdelay;
     ecf_data[11] = ecf_old_data.mindelay;
-    dpd_mode_set(ecf_data, 12, 43);
+    re_val = dpd_mode_set(ecf_data, 12, 43);
+    return re_val;
 }
 
 /* 第45种模式 dpd数据的写入 */
-void dpd_update_arch_parameters(arch_parameters arch_old_data)
+int dpd_update_arch_parameters(arch_parameters arch_old_data)
 {
     u_int32_t arch_data[2];
+    int re_val;
 
     arch_data[0] = arch_old_data.arch_sel;
 
@@ -166,16 +184,18 @@ void dpd_update_arch_parameters(arch_parameters arch_old_data)
         printf("Error: arch data data_competion Data Out of range");
         exit(1);
     }
-    dpd_mode_set(arch_data, 2, 45);
+    re_val = dpd_mode_set(arch_data, 2, 45);
+    return re_val;
 }
 
 /* 存完数据之后，启动dpd */
 void dpd_run(void)
 {
-    register_write(CONTROLMODEREGISTER, 0x6);
-    register_write(PORTNUM, 0x0);
+    sleep(2);
+    register_write(CONTROLMODEREGISTER, (u_int32_t)0x6);
+    register_write(PORTNUM, (u_int32_t)0x0);
     register_write(CONTROLMODETRIGGER, 0xabcdef12);
-    register_write(CONTROLMODETRIGGER, 0x0);
+    register_write(CONTROLMODETRIGGER, (u_int32_t)0x0);
     sleep(1);
     COMMANDSTATUS();
 }
@@ -188,20 +208,21 @@ void dpd_close(void)
     for (i = 0; i < 2; i++)
     {
         register_write(CONTROLMODEREGISTER, mode[i]);
-        register_write(PORTNUM, 0x0);
+        register_write(PORTNUM, (u_int32_t)0x0);
         register_write(CONTROLMODETRIGGER, 0xabcdef12);
-        register_write(CONTROLMODETRIGGER, 0x0);
+        register_write(CONTROLMODETRIGGER, (u_int32_t)0x0);
         sleep(1);
         COMMANDSTATUS();
     }
 }
 
 /*  把得到的数据写入dpd的数据寄存器 */
-int dpd_mode_set(u_int32_t *date, int i, int mode)
+int dpd_mode_set(u_int32_t *date, int i, u_int32_t mode)
 {
-    int k, j;
+    volatile int k, j;
     register_write(CONTROLMODEREGISTER, mode);
-    register_write(PORTNUM, 0x00);
+    register_write(PORTNUM, (u_int32_t)0x00);
+    read_write(PARAMETER_0, (u_int32_t)0x1230003);
     int l;
     for (l = 0; l < i; l++)
     {
@@ -210,18 +231,14 @@ int dpd_mode_set(u_int32_t *date, int i, int mode)
     k = TRIGGERACK(1);
     if (k == SUCCESS)
     {
-        for (k = 0; k < 20; k++)
+        j = TRIGGERACK(0);
+        if (j == 2)
         {
-            j = TRIGGERACK(0);
-            if (j == 2)
-            {
-                return SUCCESS;
-            }
-            else
-            {
-                printf("Error:");
-                exit(-1);
-            }
+            return SUCCESS;
         }
+    }
+    else
+    {
+        exit(1);
     }
 }

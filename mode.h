@@ -26,7 +26,7 @@ typedef struct ARCH_PARAMETERS
     int data_competion;
 } arch_parameters;
 
-extern void dpd_mode(void);
+extern int dpd_mode(void);
 extern void dpd_run(void);
 extern void dpd_close(void);
 #endif
